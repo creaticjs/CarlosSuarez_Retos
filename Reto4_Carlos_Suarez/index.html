@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Reto 4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="/js/main.js"></script>
+</head>
+
+<body>
+    <div id="listaSticker">
+        <div class="alert alert-success" role="alert" class="title">
+            <h1 align="center">BootCamp 2019 - Reto 4</h1>
+        </div>
+        <div class="form-row">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Gif Por Tema</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="text" class="form-control" id="search">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <input onclick="buscar()" type="button" class="btn btn-primary" id="buscar" value="Buscar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Gif Trending</h5>
+                    <input onclick="verTrending()" type="button" class="btn btn-primary" value="Trending" />
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Stickers</h5>
+                    <input @click="getdata()" type="button" class="btn btn-primary" value="Ver" />
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <img height="130px" src="https://developers.giphy.com/static/img/api.c99e353f761d.gif">
+            </div>
+        </div>
+
+        <div v-show="cargando==true"><img src="https://i.gifer.com/Yub8.gif"></div>
+        <ul>
+            <div style="float:left">
+            <div class="card" style="float:left;width: 18rem;" v-show="lista==true" v-for="stiker in stickers" style='margin: 3%;' class='media' id="lista_res">
+                <img height='100px' width='100%' :src="stiker.featured_gif.images.original.url" class='mr-3' alt=''>
+                <div class='media-body' align="center">
+                    <h5 class='mt-0 mb-1'>{{stiker.display_name}}</h5>
+                    <div class='form-group'>
+                        <input @click="getMore(stiker.display_name)" type='button' class='btn btn-primary' value='Mas'>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div style="float:left">
+                <div class="card" style="float:left;width: 18rem;" v-show="more_lista==true" v-for="stiker in more_stickers" style='margin: 3%;' class='media' id="more_lista">
+                    <img height='130px' width='100%'  :src="stiker.images.original.url" alt=''>
+                </div>
+            </div>
+            
+        </ul>
+        <ul  id="lista">            </ul>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        var api_key = "a9NbxX7Fs2VAH1N5HIBNF3YK2I9QA2EV";
+        function getP(url) {
+            return new Promise(function (resolve, reject) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4) {
+                        if (this.status == 200) {
+                            resolve(JSON.parse(this.responseText))
+                        } else {
+                            reject("Error: " + this.status);
+                        }
+                    }
+                };
+                xhttp.open("GET", url);
+                xhttp.send();
+            });
+        }
+        function renderGif(gifs) {
+            var list = document.getElementById("lista");
+            txt = "";
+            gifs.forEach(function (item) {
+                txt = txt + "<li style='margin: 3%;' class='media'>" +
+                    "<img height='100px' width='10%' src='" + item.images.preview_gif.url + "' class='mr-3' alt=''>" +
+                    "<div class='media-body'>" +
+                    "<h5 class='mt-0 mb-1'>" + item.title + "</h5>" +
+                    "<div class='form-group col-md-2'>" +
+                    `<input onclick="verOpciones('${item.id}')" type='button' class='btn btn-primary' value='Opciones'>` +
+                    "</div>" +
+                    "</div>" +
+                    "</li>";
+            });
+
+            list.innerHTML = txt;
+            var listr = document.getElementById("lista_res");
+            listr.style.display = "none";
+        }
+
+        function renderGifOpciones(gifs) {
+            var list = document.getElementById("lista");
+            txt = "";
+            gifs.forEach(function (item) {
+                if (item.search("http") >= 0) {
+                    txt = txt + "<li style='margin: 3%;' class='media'>" +
+                        "<img src='" + item + "'  alt=''>" +
+                        "</li>";
+                }
+            });
+
+            list.innerHTML = txt;
+            var mlist = document.getElementById("more_lista");
+            mlist.style.display = "none";
+        }
+
+        async function getAllDatos() {
+            var arrUrl = ["https://api.giphy.com/v1/gifs/trending?api_key=" + api_key + "&limit=25&rating=G"]
+            var promesas = arrUrl.map(function (url) {
+                return getP(url);
+            });
+            try {
+                var gifs = await Promise.all(promesas);
+                renderGif(gifs[0].data);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function verTrending() {
+            getP("https://api.giphy.com/v1/gifs/search?api_key=" + api_key + "&q=" + search + "&limit=25&offset=0&rating=G&lang=en").then(function (data) {
+                renderGif(data.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+
+        async function buscar() {
+            var search = document.getElementById("search").value;
+            var arrUrl = ["https://api.giphy.com/v1/gifs/search?api_key=" + api_key + "&q=" + search + "&limit=25&offset=0&rating=G&lang=en"]
+            var promesas = arrUrl.map(function (url) {
+                return getP(url);
+            });
+            try {
+                var gifs = await Promise.all(promesas);
+                renderGif(gifs[0].data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function download(id) {
+            getP("https://api.giphy.com/v1/gifs/" + id + "?api_key=" + api_key).then(function (data) {
+                descargarLink(data.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+
+        function verOpciones(id) {
+            getP("https://api.giphy.com/v1/gifs/" + id + "?api_key=" + api_key).then(function (data) {
+                var urls = [];
+                for (const prop in data.data.images) {
+                    for (const pro in data.data.images[prop]) {
+                        urls.push(data.data.images[prop][pro]);
+                        console.log(`obj.${prop} = ${data.data.images[prop][pro]}`);
+                        //break;
+                    }
+                }
+                renderGifOpciones(urls);
+            }).catch(function (error) {
+                console.error(error);
+            });
+        }
+
+        function descargarLink(gift) {
+            var a = document.createElement("a");
+            a.href = gift.images.preview_gif.url;
+            //console.log(gift.images.preview_gif.url);
+            a.download = true;
+            a.click();
+            //location.href = gift.images.downsized_large.url;
+        }
+
+        async function buscar() {
+            var search = document.getElementById("search").value;
+            var arrUrl = ["https://api.giphy.com/v1/gifs/search?api_key=" + api_key + "&q=" + search + "&limit=25&offset=0&rating=G&lang=en"]
+            var promesas = arrUrl.map(function (url) {
+                return getP(url);
+            });
+            try {
+                var gifs = await Promise.all(promesas);
+                renderGif(gifs[0].data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        var app = new Vue({
+            el: "#listaSticker",
+            data: {
+                cargando: false,
+                lista: true,
+                more_lista: true,
+                stickers: [],
+                more_stickers: []
+            },
+            methods: {
+                getdata: function () {
+                    this.cargando = true;
+                    fetch("https://api.giphy.com/v1/stickers/packs?api_key=" + api_key).then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        console.log(data.data);
+                        app.stickers = data.data;
+                        app.cargando = false;
+                        app.more_lista = false;
+                        app.lista = true;
+                    }).catch(function (error) {
+                        console.log(error.message);
+                    });
+                    setTimeout(() => {
+                        app.cargando = false;
+                    }, 2000);
+                },
+                getMore: function (search) {
+                    this.cargando = true;
+                    fetch("https://api.giphy.com/v1/stickers/search?api_key=" + api_key + "&q=" + search + "&limit=25&offset=0&rating=G&lang=en").then(function (response) {
+                        return response.json();
+                    }).then(function (data) {
+                        console.log(data.data);
+                        app.more_stickers = data.data;
+                        app.cargando = false;
+                        app.more_lista = true;
+                        app.lista = false;
+                    }).catch(function (error) {
+                        console.log(error.message);
+                    });
+                    setTimeout(() => {
+                        app.cargando = false;
+                    }, 2000);
+                }
+
+            }
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+.numero{
+    width: 100px;
+    background: #008000ab;
+    border: none;
+    height: 100px;
+    font-size: 30px;
+    border-radius: 9px;
+    border-style: outset;
+    color: white;
+}
+.operador{
+    width: 100px;
+    background: #3eb392;
+    border: none;
+    height: 100px;
+    font-size: 30px;
+    border-radius: 9px;
+    border-style: outset;
+}
+.resultado{
+    width: 100px;
+    background: #6464b5;
+    border: none;
+    height: 100px;
+    font-size: 30px;
+    border-radius: 9px;
+    border-style: outset;
+}
+.pantalla{
+    height: 100px;
+    width: 305px;
+    font-size: 30px;
+    border-radius: 9px;
+    background: #a9a9a961;
+}
+.resultado:hover { 
+    background: gray;
+}
+.operador:hover { 
+    background: gray;
+}
+.numero:hover { 
+    background: gray;
+}
+.resultado:active { 
+    background: rgb(22, 22, 22);
+}
+.operador:active { 
+    background: rgb(22, 22, 22);;
+}
+.numero:active { 
+    background: rgb(22, 22, 22);;
+}

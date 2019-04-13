@@ -1,0 +1,29 @@
+.menu{
+    width: 20%;
+    float: left;
+}
+.solucion{
+    float: left;
+    width: 80%
+}
+.object_contenedor{
+    width: 40%;
+    height: 500px;
+    margin-left: 5%;
+
+}
+.title{
+    width: 100%;
+}
+.title_opcion{
+    width: 100%;
+}
+.res_fuerza{
+    font-size: 30px;
+}
+.res_formato{
+    font-size: 30px;
+}
+.list-group-item:hover{
+    background-color: #a5a4a4;
+}
