@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+     rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <di class="container">
+            <vs-row vs-justify="center">
+                <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="2">
+                    <vs-card>
+                        <div slot="header">
+                            <h3>
+                                Factura
+                            </h3>
+                        </div>
+                        <div>
+                        <div><vs-input icon-after="true" label-placeholder="icon-after" icon="mode_edit"
+                            placeholder="Item" v-model="items[0].nombre" /></div>    
+                        <div><vs-input icon-after="true" label-placeholder="icon-after" icon="mode_edit"
+                            placeholder="Precio" v-model="items.precio" /></div>    
+                        <div><vs-input icon-after="true" label-placeholder="icon-after" icon="mode_edit"
+                            placeholder="Cantidad" v-model="items.cantidad" /></div>   
+                        </div>
+                        <div slot="footer">
+                                <vs-row vs-justify="flex-end">
+                                  <vs-button @click="addItem()" color="primary" type="gradient" >Add Item</vs-button>
+                                </vs-row>
+                        </div>
+                    </vs-card>
+                </vs-col>
+            </vs-row>
+        </di>
+
+
+        <div class="container">
+            
+            <vs-button @click="addSuper()" color="success" type="filled">addSuper</vs-button>
+
+            <div>
+                <v-select label="nombre" v-model="estudiante" :options="estudiantes"></v-select>
+            </div>
+            <div class="row">
+                <super-componente v-for="estudiante in estudiantes" :nombre="estudiante.nombre"></super-componente>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <script src="./js/index.js"></script>
+</body>
+
+</html>
